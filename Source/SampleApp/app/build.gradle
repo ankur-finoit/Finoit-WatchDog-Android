@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.app"
+
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionCode Integer.valueOf("" + appVersionCode).intValue()
+        versionName "${appVersionName}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        signingconfig_release {
+        }
+        signingconfig_debug {
+            keyAlias 'DebugAlias'
+            keyPassword 'Alias1234'
+            storeFile file('../../../Keys/debug_key.jks')
+            storePassword 'pass1234'
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+
+            minifyEnabled true
+            debuggable true
+            useProguard false
+            signingConfig signingConfigs.signingconfig_debug
+        }
+        staging {
+            applicationIdSuffix ".staging"
+
+            minifyEnabled true
+            debuggable true
+            useProguard false
+            signingConfig signingConfigs.signingconfig_debug
+        }
+        release {
+
+            minifyEnabled true
+            debuggable true
+            useProguard true
+            signingConfig signingConfigs.signingconfig_debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation project(':watchdog')
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.support_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+//    implementation "http://git.finoit.com/WatchDogs/WatchDog-Android.git"
+
+    apply from: "../artifacts.gradle"
+}
